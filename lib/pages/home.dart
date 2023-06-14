@@ -11,7 +11,7 @@ class Home extends StatelessWidget {
           icon: Icon(Icons.menu),
           onPressed: () {},
         ),
-        title: const Text('Seafloor'),
+        title: const Text('Seafloor 0.1'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.more_vert),
