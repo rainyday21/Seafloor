@@ -6,23 +6,40 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(16.0),
-                ),
-                TitleWidget(),
-                Padding(
-                  padding: EdgeInsets.all(16.0),
-                ),
-              ],
+      body: Container(
+        alignment: Alignment.topCenter,
+        child: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(16.0),
+                  ),
+                  TitleWidget(),
+                  Padding(
+                    padding: EdgeInsets.all(16.0),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      ServicesSection(),
+                      Padding(
+                        padding: EdgeInsets.all(16.0),
+                      ),
+                      RecDevSection(
+                        devices: [],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -57,11 +74,114 @@ class TitleWidget extends StatelessWidget {
   }
 }
 
-class menu1 extends StatelessWidget {
-  const menu1({super.key});
+class AddMenu extends StatefulWidget {
+  const AddMenu({super.key});
 
+  @override
+  State<AddMenu> createState() => _AddMenuState();
+}
+
+class _AddMenuState extends State<AddMenu> {
   @override
   Widget build(BuildContext context) {
     return const Column();
   }
+}
+
+class ServicesSection extends StatelessWidget {
+  const ServicesSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text(
+          'Services',
+          style: TextStyle(
+            color: Theme.of(context).primaryColorDark,
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.all(16.0),
+        ),
+        TextButton.icon(
+          icon: const Icon(
+            Icons.menu_open,
+            color: Colors.lightGreen,
+            ),
+          onPressed: () {},
+          label: const Text('SSH Terminal'),
+        ),
+        const Padding(
+          padding: EdgeInsets.all(16.0),
+        ),
+        TextButton.icon(
+          onPressed: () {},
+          label: const Text('View System Info'),
+          icon: const Icon(
+            Icons.settings_outlined,
+            color: Colors.blueGrey,
+            ),
+          
+        )
+      ],
+    );
+  }
+}
+
+class RecDevSection extends StatefulWidget {
+  const RecDevSection({required this.devices, super.key});
+
+  final List<Device> devices;
+
+  @override
+  State<RecDevSection> createState() => _RecDevSectionState();
+}
+
+class _RecDevSectionState extends State<RecDevSection> {
+  List<Device> devList = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text(
+          'Recent Devices',
+          style: TextStyle(
+            color: Theme.of(context).primaryColorDark,
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class Service {
+  Service({required this.name});
+
+  final String name;
+  late Icon servIcon = setIcon();
+
+  Icon setIcon() {
+    String temp = name.toLowerCase();
+    Icon ret = const Icon(Icons.question_mark_outlined);
+    if (temp.contains('ssh')) {
+      ret = const Icon(Icons.menu_open);
+    } else if (temp.contains('info')) {
+      ret = const Icon(Icons.settings_outlined);
+    }
+    return ret;
+  }
+}
+
+class Device {
+  const Device(
+      {required this.username, required this.hostname, required this.port});
+
+  final String username, hostname;
+  final int port;
 }

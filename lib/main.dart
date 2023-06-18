@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seafloor/pages/about.dart';
 import 'package:seafloor/pages/home.dart';
 import 'package:seafloor/pages/login.dart';
 import 'package:seafloor/pages/sysInfo.dart';
@@ -51,10 +52,12 @@ class _currPage extends State<currentPage> {
         page = const terminalMain(); //Terminal goes here
         break;
       case 2:
-        page = SystemInfo();
+        page = const SystemInfo();
         break;
       case 3:
-        page = LoginPage();
+        page = const LoginPage();
+      case 4:
+        page = const AboutPage();
       default:
         throw UnimplementedError('no Widget for $selectedIndex');
     }
@@ -79,18 +82,25 @@ class _currPage extends State<currentPage> {
               SafeArea(
                 child: NavigationRail(
                   extended: constraints.maxWidth >= 600,
-                  destinations: [
+                  destinations: const [
                     NavigationRailDestination(
-                        icon: Icon(Icons.add), label: Text('Add a service')),
+                      icon: Icon(Icons.home),
+                      label: Text('Home'),
+                    ),
                     NavigationRailDestination(
-                        icon: Icon(Icons.remove),
-                        label: Text('Remove a service')),
+                      icon: Icon(Icons.menu_open),
+                      label: Text('Terminal'),
+                    ),
                     NavigationRailDestination(
-                        icon: Icon(Icons.settings), label: Text('Information'),),
+                      icon: Icon(Icons.settings),
+                      label: Text('System Information'),
+                    ),
                     NavigationRailDestination(
                       icon: Icon(Icons.key),
                       label: Text('Login'),
-                    )
+                    ),
+                    NavigationRailDestination(
+                        icon: Icon(Icons.info), label: Text('About')),
                   ],
                   selectedIndex: selectedIndex,
                   onDestinationSelected: (value) {

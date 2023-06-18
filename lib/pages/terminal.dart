@@ -17,8 +17,11 @@ class _termMain extends State<terminalMain> {
           children: <Widget>[
             Text('Here is the Terminal!'),
           ],
+          
         ),
+        
       ),
+      backgroundColor: Color.fromARGB(255, 25, 68, 90),
     );
   }
 }

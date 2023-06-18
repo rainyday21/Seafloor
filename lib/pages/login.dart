@@ -1,6 +1,9 @@
+
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _loginPage createState() => _loginPage();
 }
@@ -8,40 +11,36 @@ class LoginPage extends StatefulWidget {
 class sshInfo {
   String username = '';
   String hostname = '';
-  String port = '';
+  int port = 22;
 }
 
 class _loginPage extends State<LoginPage> {
   final GlobalKey<FormState> _formStateKey = GlobalKey<FormState>();
 
-  sshInfo _info = sshInfo();
+  final sshInfo _info = sshInfo();
 
-  String _validateSSHInfo(String usr, String hst, String port) {
-    if (usr.isEmpty) {
-      usr = 'empty';
+  String? _validateInfo(String? info) {
+    if (info == null || info.isEmpty) {
+      return null;
+    } else {
+      return info;
     }
-    if (hst.isEmpty) {
-      hst = 'empty';
-    }
-    if (port.isEmpty) {
-      port = 'empty';
-    }
-    return '$usr@$hst:$port';
   }
 
-
+  String? _validatePort(String? info) {
+    if (info == null || info.isEmpty) {
+      return '0';
+    } else {
+      return info;
+    }
+  }
 
   void _getFullSSH() {
     if (_formStateKey.currentState!.validate()) {
       _formStateKey.currentState!.save();
-      String full = sshInfo.username;
+      String full = '${sshInfo().username}@${sshInfo().hostname}:${sshInfo().port}';
       print("Full info is $full");
     }
-  }
-
-  void setUser(TextFormField txt) {
-    txt.
-
   }
 
   @override
@@ -54,33 +53,38 @@ class _loginPage extends State<LoginPage> {
               key: _formStateKey,
               autovalidateMode: AutovalidateMode.always,
               child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: <Widget>[
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Username',
                       ),
-                      validator: _validateSSHInfo(),
+                      validator: (value) => _validateInfo(value),
+                      onSaved: (value) => sshInfo().username = value!,
                     ),
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.all(16.0),
                     ),
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Hostname',
                       ),
+                      validator: (value) => _validateInfo(value),
+                      onSaved: (value) => sshInfo().hostname = value!,
                     ),
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Port',
                       ),
+                      validator: (value) => _validatePort(value),
+                      onSaved: (value) => sshInfo().port = int.tryParse(value!)!,
                     )
                   ],
                 ),
               ),
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(16.0),
             ),
             ButtonBar(
@@ -88,22 +92,20 @@ class _loginPage extends State<LoginPage> {
               children: <Widget>[
                 TextButton(
                   onPressed: () {
-                  _getFullSSH();
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                ),
-                child: Text('Login'),
+                    _getFullSSH();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).primaryColor),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
+                  ),
+                  child: const Text('Login'),
                 ),
                 TextButton(
-                  onPressed: () {
-                  
-                },
-                child: Text('Cancel'),
+                  onPressed: () {},
+                  child: const Text('Cancel'),
                 ),
-                
-                
               ],
             ),
           ],
