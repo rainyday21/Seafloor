@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:seafloor/pages/home.dart';
+import 'package:seafloor/services/ssh_device.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,6 +12,7 @@ class LoginPage extends StatefulWidget {
 class sshInfo {
   String username = '';
   String hostname = '';
+  String password = '';
   int port = 22;
 }
 
@@ -19,24 +22,31 @@ class _loginPage extends State<LoginPage> {
   final sshInfo _info = sshInfo();
 
   String? _validateInfo(String? info) {
-    if (info == null || info.isEmpty) {
+    if (info == null ||
+        info.isEmpty ||
+        info.contains(RegExp(r'[^A-Za-z0-9]'))) {
       return 'Not acceptable';
     }
+    return null;
   }
 
   String? _validatePort(String? info) {
-    if (info == null || info.isEmpty) {
+    if (info == null || info.isEmpty || info.contains(RegExp(r'[^0-9]'))) {
       return 'Enter proper port';
-      } 
+    }
+    return null;
   }
-
-   
 
   void _getFullSSH() {
     if (_formStateKey.currentState!.validate()) {
       _formStateKey.currentState!.save();
-      String full =
-          '${_info.username}@${_info.hostname}:${_info.port}';
+      String full = '${_info.username}@${_info.hostname}:${_info.port}';
+      var Tes = Tester();
+      Tes.method();
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const Home()),
+      );
       print("Full info is $full");
     }
   }
@@ -84,6 +94,8 @@ class _loginPage extends State<LoginPage> {
                         labelText: "Password",
                       ),
                       obscureText: true,
+                      validator: (value) => _validateInfo(value!),
+                      onSaved: (value) => _info.password = value!,
                     ),
                     TextFormField(
                       decoration: const InputDecoration(
@@ -97,8 +109,7 @@ class _loginPage extends State<LoginPage> {
                         labelText: 'Port',
                       ),
                       validator: (value) => _validatePort(value),
-                      onSaved: (value) =>
-                          _info.port = int.tryParse(value!)!,
+                      onSaved: (value) => _info.port = int.tryParse(value!)!,
                     )
                   ],
                 ),

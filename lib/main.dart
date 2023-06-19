@@ -4,6 +4,7 @@ import 'package:seafloor/pages/home.dart';
 import 'package:seafloor/pages/login.dart';
 import 'package:seafloor/pages/sysInfo.dart';
 import 'package:seafloor/pages/terminal.dart';
+import 'package:seafloor/widgets/menulist_main.dart';
 
 void main() => runApp(const Seafloor());
 
@@ -41,6 +42,7 @@ class currentPage extends StatefulWidget {
 
 class _currPage extends State<currentPage> {
   var selectedIndex = 3;
+
   @override
   Widget build(BuildContext context) {
     Widget page = const Home();
@@ -65,17 +67,7 @@ class _currPage extends State<currentPage> {
       builder: (context, constraints) {
         return Scaffold(
           appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {},
-            ),
             title: const Text('Seafloor 0.1'),
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.more_vert),
-                onPressed: () {},
-              ),
-            ],
           ),
           body: Row(
             children: <Widget>[
@@ -119,6 +111,7 @@ class _currPage extends State<currentPage> {
               ),
             ],
           ),
+          drawer: const DrawerWidget(),
         );
       },
     );
