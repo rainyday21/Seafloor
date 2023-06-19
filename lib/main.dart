@@ -40,7 +40,7 @@ class currentPage extends StatefulWidget {
 }
 
 class _currPage extends State<currentPage> {
-  var selectedIndex = 0;
+  var selectedIndex = 3;
   @override
   Widget build(BuildContext context) {
     Widget page = const Home();

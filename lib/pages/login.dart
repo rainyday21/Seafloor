@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -21,24 +20,23 @@ class _loginPage extends State<LoginPage> {
 
   String? _validateInfo(String? info) {
     if (info == null || info.isEmpty) {
-      return null;
-    } else {
-      return info;
+      return 'Not acceptable';
     }
   }
 
   String? _validatePort(String? info) {
     if (info == null || info.isEmpty) {
-      return '0';
-    } else {
-      return info;
-    }
+      return 'Enter proper port';
+      } 
   }
+
+   
 
   void _getFullSSH() {
     if (_formStateKey.currentState!.validate()) {
       _formStateKey.currentState!.save();
-      String full = '${sshInfo().username}@${sshInfo().hostname}:${sshInfo().port}';
+      String full =
+          '${_info.username}@${_info.hostname}:${_info.port}';
       print("Full info is $full");
     }
   }
@@ -49,43 +47,68 @@ class _loginPage extends State<LoginPage> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
+            const Padding(
+              padding: EdgeInsets.all(
+                16.0,
+              ),
+            ),
+            const Text(
+              'Enter machine info:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25.0,
+                color: Colors.blueGrey,
+              ),
+            ),
             Form(
               key: _formStateKey,
-              autovalidateMode: AutovalidateMode.always,
+              //autovalidateMode: AutovalidateMode.always,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.only(
+                  left: 35.0,
+                  right: 35.0,
+                  top: 16.0,
+                  bottom: 16.0,
+                ),
                 child: Column(
                   children: <Widget>[
                     TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'Username',
                       ),
-                      validator: (value) => _validateInfo(value),
-                      onSaved: (value) => sshInfo().username = value!,
+                      validator: (value) => _validateInfo(value!),
+                      onSaved: (value) => _info.username = value!,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.all(16.0),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: "Password",
+                      ),
+                      obscureText: true,
                     ),
                     TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'Hostname',
                       ),
-                      validator: (value) => _validateInfo(value),
-                      onSaved: (value) => sshInfo().hostname = value!,
+                      validator: (value) => _validateInfo(value!),
+                      onSaved: (value) => _info.hostname = value!,
                     ),
                     TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'Port',
                       ),
                       validator: (value) => _validatePort(value),
-                      onSaved: (value) => sshInfo().port = int.tryParse(value!)!,
+                      onSaved: (value) =>
+                          _info.port = int.tryParse(value!)!,
                     )
                   ],
                 ),
               ),
             ),
             const Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.only(
+                top: 8.0,
+                bottom: 8.0,
+              ),
             ),
             ButtonBar(
               alignment: MainAxisAlignment.spaceEvenly,
@@ -99,12 +122,19 @@ class _loginPage extends State<LoginPage> {
                         Theme.of(context).primaryColor),
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.white),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                    ),
                   ),
                   child: const Text('Login'),
                 ),
                 TextButton(
-                  onPressed: () {},
-                  child: const Text('Cancel'),
+                  onPressed: () {
+                    _formStateKey.currentState?.reset();
+                  },
+                  child: const Text('Clear'),
                 ),
               ],
             ),
