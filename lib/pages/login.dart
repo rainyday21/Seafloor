@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:seafloor/pages/home.dart';
 import 'package:seafloor/services/ssh_device.dart';
+import 'package:ssh2/ssh2.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -30,6 +30,15 @@ class _loginPage extends State<LoginPage> {
     return null;
   }
 
+  String? _validateHost(String? info) {
+    if (info == null ||
+        info.isEmpty ||
+        info.contains(RegExp(r'[^A-Za-z0-9.]'))) {
+      return 'Not acceptable';
+    }
+    return null;
+  }
+
   String? _validatePort(String? info) {
     if (info == null || info.isEmpty || info.contains(RegExp(r'[^0-9]'))) {
       return 'Enter proper port';
@@ -41,12 +50,19 @@ class _loginPage extends State<LoginPage> {
     if (_formStateKey.currentState!.validate()) {
       _formStateKey.currentState!.save();
       String full = '${_info.username}@${_info.hostname}:${_info.port}';
-      var Tes = Tester();
-      Tes.method();
-      Navigator.push(
+      Device currDevice = Device(
+        host: _info.hostname,
+        port: _info.port,
+        username: _info.username,
+        passwordOrKey: _info.password,
+      );
+      /* Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const Home()),
-      );
+      ); */
+      var T = Tester.withDevice(d: currDevice);
+      T.method();
+
       print("Full info is $full");
     }
   }
@@ -101,7 +117,7 @@ class _loginPage extends State<LoginPage> {
                       decoration: const InputDecoration(
                         labelText: 'Hostname',
                       ),
-                      validator: (value) => _validateInfo(value!),
+                      validator: (value) => _validateHost(value!),
                       onSaved: (value) => _info.hostname = value!,
                     ),
                     TextFormField(

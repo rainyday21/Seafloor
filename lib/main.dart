@@ -41,11 +41,10 @@ class currentPage extends StatefulWidget {
 }
 
 class _currPage extends State<currentPage> {
-  var selectedIndex = 3;
+  var selectedIndex = 0;
+  Widget page = const Home();
 
-  @override
-  Widget build(BuildContext context) {
-    Widget page = const Home();
+  void setPage(int ind) {
     switch (selectedIndex) {
       case 0:
         page = const Home();
@@ -58,11 +57,17 @@ class _currPage extends State<currentPage> {
         break;
       case 3:
         page = const LoginPage();
+        break;
       case 4:
         page = const AboutPage();
+        break;
       default:
         throw UnimplementedError('no Widget for $selectedIndex');
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
@@ -97,8 +102,8 @@ class _currPage extends State<currentPage> {
                   selectedIndex: selectedIndex,
                   onDestinationSelected: (value) {
                     setState(() {
-                      selectedIndex = value;
                       print('Selected index is $selectedIndex');
+                      setPage(selectedIndex);
                     });
                   },
                 ),
