@@ -1,22 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:seafloor/services/ssh_device.dart';
 
 class SystemInfo extends StatefulWidget {
-  const SystemInfo({super.key});
+  final SSHConnection connection;
+  final String test = 'hello';
+  const SystemInfo({required this.connection, super.key});
 
   @override
-  _sysInfo createState() => _sysInfo();
+  State<SystemInfo> createState() => _sysInfo();
 }
 
 class _sysInfo extends State<SystemInfo> {
+  String info = '';
+  void getString() {
+    Future<String> sysInfo =
+        widget.connection.getSysInfo().then((sysInfo) => info);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Column(
         children: <Widget>[
-          Text('System Info'),
+          const Text('System Info'),
+          SafeArea(
+            child: Text(info),
+          ),
         ],
       ),
     );
   }
 }
+
+class getSysInfo {}

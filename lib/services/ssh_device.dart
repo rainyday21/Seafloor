@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:seafloor/pages/sysInfo.dart';
 import 'package:ssh2/ssh2.dart';
 
 class Device extends SSHClient {
@@ -8,10 +8,6 @@ class Device extends SSHClient {
       required super.port,
       required super.username,
       required super.passwordOrKey});
-
-  String getfullSSHInfo() {
-    return '$username@$host:$port';
-  }
 }
 
 class Tester {
@@ -24,40 +20,85 @@ class Tester {
   void method() async {
     await _client.connect();
     print(_client.getHostFingerprint());
-    print(_client.getfullSSHInfo());
     await _client.disconnect();
   }
 }
 
-class MainMethods {
+class SSHConnection {
   late Device _client;
-  String _result = '';
-  List _array = [];
+  final String _result = '';
+  final List _array = [];
+
+  SSHConnection({required Device client}) {
+    _client = client;
+  }
 
   void getDevice(Device d) {
     _client = d;
   }
 
   Future<void> startShell() async {
+    // last thing to work on
     String? result = '';
-    
-    try { //setup connection
+
+    try {
+      //setup connection
       result = await _client.connect() ?? 'Null result';
       if (result == 'session_connected') {
         result = await _client.startShell(
-          ptyType: "xterm",
-          callback: (dynamic res) {
-            print(res);
-            }
-        ) ?? 'Null Result';
+                ptyType: "xterm",
+                callback: (dynamic res) {
+                  print(res);
+                }) ??
+            'Null Result';
       }
-      
-    }
-    on PlatformException catch (e) {
+    } on PlatformException catch (e) {
       String erMsg = 'Error: ${e.code}\nError Message: ${e.message}';
       result = result! + erMsg;
       print(erMsg);
     }
+  }
 
+  Future<void> setConfig(String cmd) async {
+    String result = '';
+    String cmd = 'sudo raspi-config nonint do_';
+
+    void SetCmd(String opt) {
+      cmd += opt;
+    }
+
+    try {
+      result = await _client.connect() ?? 'Null Result';
+      if (result == 'session_connected') {
+        result = await _client.execute(cmd) ?? 'Null Result';
+      }
+      await _client.disconnect();
+    } on PlatformException catch (e) {
+      String errorMessage = 'Error: ${e.code}\nError Message: ${e.message}';
+      result = errorMessage;
+      print(errorMessage);
+    }
+  }
+
+  Future<String> getSysInfo() async {
+    String result = '';
+    String cmd = 'cat /etc/os-release';
+
+    try {
+      result = await _client.connect() ?? 'Null';
+      if (result == 'session_connected') {
+        result = await _client.execute(cmd) ?? 'Null';
+      }
+      await _client.disconnect();
+    } on PlatformException catch (e) {
+      String errMsg = 'Error: ${e.code}\nError Message: ${e.message}';
+      result = errMsg;
+      print(errMsg);
+    }
+    return result;
+  }
+
+  String getfullSSHInfo() {
+    return '$_client.username@$_client.host:$_client.port';
   }
 }

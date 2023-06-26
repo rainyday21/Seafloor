@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:seafloor/services/ssh_device.dart';
 
 class terminalMain extends StatefulWidget {
-  const terminalMain({super.key});
+  const terminalMain({required this.connection, super.key});
+  final SSHConnection connection;
 
   //creating stateful Widget for switching
   @override
-  _termMain createState() => _termMain();
+  State<terminalMain> createState() => _termMain();
 }
 
 class _termMain extends State<terminalMain> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            Text('Here is the Terminal!'),
+            const Text('Here is the Terminal!'),
+            Text('Connected to ${widget.connection.getfullSSHInfo()}')
           ],
-          
         ),
-        
       ),
-      backgroundColor: Color.fromARGB(255, 25, 68, 90),
+      backgroundColor: const Color.fromARGB(255, 25, 68, 90),
     );
   }
 }

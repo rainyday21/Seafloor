@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:seafloor/pages/login.dart';
 import 'package:seafloor/utils/classes.dart';
 
 class Home extends StatelessWidget {
-  const Home({super.key});
+  const Home({super.key, required this.navigate});
 
+  final Function navigate;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         alignment: Alignment.topCenter,
-        child: const Padding(
-          padding: EdgeInsets.all(8.0),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -19,11 +19,11 @@ class Home extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.all(16.0),
                   ),
-                  TitleWidget(),
-                  Padding(
+                  const TitleWidget(),
+                  const Padding(
                     padding: EdgeInsets.all(16.0),
                   ),
                   Column(
@@ -31,11 +31,13 @@ class Home extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
-                      ServicesSection(),
-                      Padding(
+                      ServicesSection(
+                        navigate: navigate,
+                      ),
+                      const Padding(
                         padding: EdgeInsets.all(16.0),
                       ),
-                      RecDevSection(
+                      const RecDevSection(
                         devices: [],
                       ),
                     ],
@@ -46,11 +48,11 @@ class Home extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      /*floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: const Icon(Icons.menu_book),
-      ),
+      ),*/
     );
   }
 }
@@ -84,7 +86,6 @@ class AddMenu extends StatefulWidget {
 }
 
 class _AddMenuState extends State<AddMenu> {
-  
   @override
   Widget build(BuildContext context) {
     return const Column();
@@ -92,8 +93,9 @@ class _AddMenuState extends State<AddMenu> {
 }
 
 class ServicesSection extends StatelessWidget {
-  const ServicesSection({super.key});
+  const ServicesSection({super.key, required this.navigate});
 
+  final Function navigate;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -113,11 +115,12 @@ class ServicesSection extends StatelessWidget {
           children: [
             TextButton.icon(
               onPressed: () {
-                Navigator.push(
+                /*Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
-                    ));
+                      builder: (context) => LoginPage(),
+                    )); */
+                navigate(1);
               },
               icon: const Icon(Icons.add),
               label: const Text('Log in to new Device'),
@@ -130,14 +133,18 @@ class ServicesSection extends StatelessWidget {
                 Icons.menu_open,
                 color: Colors.lightGreen,
               ),
-              onPressed: () {},
+              onPressed: () {
+                navigate(3);
+              },
               label: const Text('SSH Terminal'),
             ),
             const Padding(
               padding: EdgeInsets.all(8.0),
             ),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                navigate(4);
+              },
               label: const Text('View System Info'),
               icon: const Icon(
                 Icons.settings_outlined,
@@ -179,5 +186,3 @@ class _RecDevSectionState extends State<RecDevSection> {
     );
   }
 }
-
-

@@ -1,31 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:seafloor/pages/about.dart';
-import 'package:seafloor/pages/sysInfo.dart';
-import 'package:seafloor/pages/terminal.dart';
+import 'package:seafloor/services/ssh_device.dart';
 
 class MenuListTileWidget extends StatefulWidget {
-  const MenuListTileWidget({super.key});
+  MenuListTileWidget({super.key, required this.navigate, required this.status});
 
+  final Function navigate;
+  bool status;
   @override
   State<MenuListTileWidget> createState() => _MenuListTileWidgetState();
 }
 
 class _MenuListTileWidgetState extends State<MenuListTileWidget> {
+  Widget addition = const ListBody();
+
+  void setOption() {
+    if (widget.status) {
+      addition = ConnectedTiles(navigate: widget.navigate);
+    } else {
+      addition = const ListBody();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: <Widget>[
+      children: [
+        ListBody(
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+                widget.navigate(0);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.key_outlined),
+              title: const Text('Login'),
+              onTap: () {
+                Navigator.pop(context);
+                widget.navigate(1);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('About Me'),
+              onTap: () {
+                Navigator.pop(context);
+                widget.navigate(2);
+              },
+            ),
+          ],
+        ),
+        const Divider(),
+        addition,
+      ],
+    );
+  }
+}
+
+class ConnectedTiles extends StatelessWidget {
+  ConnectedTiles({super.key, required this.navigate});
+
+  final Function navigate;
+  ListBody addition = ListBody();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListBody(
+      children: [
         ListTile(
           leading: const Icon(Icons.menu_open),
           title: const Text('SSH Terminal'),
           onTap: () {
             Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const terminalMain(),
-              ),
-            );
+            navigate(3);
           },
         ),
         ListTile(
@@ -33,25 +83,7 @@ class _MenuListTileWidgetState extends State<MenuListTileWidget> {
           title: const Text('View System Information'),
           onTap: () {
             Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const SystemInfo(),
-              ),
-            );
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.info_outline),
-          title: const Text('About Me'),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AboutPage(),
-              ),
-            );
+            navigate(4);
           },
         ),
       ],
@@ -60,16 +92,23 @@ class _MenuListTileWidgetState extends State<MenuListTileWidget> {
 }
 
 class DrawerWidget extends StatelessWidget {
-  const DrawerWidget({super.key});
+  DrawerWidget({super.key, required this.navigate, required this.status});
 
+  final Function navigate;
+  bool status;
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: const <Widget>[
-          MenuListTileWidget(),
-        ],
+      child: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.only(top: 16.0),
+          children: <Widget>[
+            MenuListTileWidget(
+              navigate: navigate,
+              status: status,
+            ),
+          ],
+        ),
       ),
     );
   }

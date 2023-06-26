@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:seafloor/services/ssh_device.dart';
-import 'package:ssh2/ssh2.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({super.key, required this.navigate, required this.func2});
 
+  final Function navigate, func2;
   @override
   _loginPage createState() => _loginPage();
 }
@@ -20,7 +20,6 @@ class _loginPage extends State<LoginPage> {
   final GlobalKey<FormState> _formStateKey = GlobalKey<FormState>();
 
   final sshInfo _info = sshInfo();
-
   String? _validateInfo(String? info) {
     if (info == null ||
         info.isEmpty ||
@@ -56,13 +55,11 @@ class _loginPage extends State<LoginPage> {
         username: _info.username,
         passwordOrKey: _info.password,
       );
-      /* Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Home()),
-      ); */
-      var T = Tester.withDevice(d: currDevice);
-      T.method();
-
+      setState(() {
+      SSHConnection currConn = SSHConnection(client: currDevice);
+      widget.func2(currConn);
+      widget.navigate(0);
+      });
       print("Full info is $full");
     }
   }

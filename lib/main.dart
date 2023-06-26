@@ -4,6 +4,7 @@ import 'package:seafloor/pages/home.dart';
 import 'package:seafloor/pages/login.dart';
 import 'package:seafloor/pages/sysInfo.dart';
 import 'package:seafloor/pages/terminal.dart';
+import 'package:seafloor/services/ssh_device.dart';
 import 'package:seafloor/widgets/menulist_main.dart';
 
 void main() => runApp(const Seafloor());
@@ -28,13 +29,16 @@ class _SeafloorApp extends State<Seafloor> {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
-      home: const currentPage(),
+      home: currentPage(),
     );
   }
 }
 
 class currentPage extends StatefulWidget {
-  const currentPage({super.key});
+  late SSHConnection currConn;
+  late bool isConnected = false;
+
+  currentPage({super.key});
 
   @override
   _currPage createState() => _currPage();
@@ -42,28 +46,40 @@ class currentPage extends StatefulWidget {
 
 class _currPage extends State<currentPage> {
   var selectedIndex = 0;
-  Widget page = const Home();
+  Widget page = const AboutPage();
+
+  void setConn(SSHConnection newConn) {
+    widget.currConn = newConn;
+    widget.isConnected = true;
+  }
+
+  SSHConnection getConn() {
+    return widget.currConn;
+  }
 
   void setPage(int ind) {
-    switch (selectedIndex) {
-      case 0:
-        page = const Home();
-        break;
-      case 1:
-        page = const terminalMain(); //Terminal goes here
-        break;
-      case 2:
-        page = const SystemInfo();
-        break;
-      case 3:
-        page = const LoginPage();
-        break;
-      case 4:
-        page = const AboutPage();
-        break;
-      default:
-        throw UnimplementedError('no Widget for $selectedIndex');
-    }
+    selectedIndex = ind;
+    setState(() {
+      switch (selectedIndex) {
+        case 0:
+          page = Home(navigate: setPage);
+          break;
+        case 1:
+          page = LoginPage(navigate: setPage, func2: setConn);
+          break;
+        case 2:
+          page = const AboutPage();
+          break;
+        case 3:
+          page = SystemInfo(connection: widget.currConn);
+          break;
+        case 4:
+          page = terminalMain(connection: widget.currConn); //Terminal goes here
+          break;
+        default:
+          throw UnimplementedError('no Widget for $selectedIndex');
+      }
+    });
   }
 
   @override
@@ -74,49 +90,14 @@ class _currPage extends State<currentPage> {
           appBar: AppBar(
             title: const Text('Seafloor 0.1'),
           ),
-          body: Row(
-            children: <Widget>[
-              SafeArea(
-                child: NavigationRail(
-                  extended: constraints.maxWidth >= 600,
-                  destinations: const [
-                    NavigationRailDestination(
-                      icon: Icon(Icons.home),
-                      label: Text('Home'),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.menu_open),
-                      label: Text('Terminal'),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.settings),
-                      label: Text('System Information'),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.key),
-                      label: Text('Login'),
-                    ),
-                    NavigationRailDestination(
-                        icon: Icon(Icons.info), label: Text('About')),
-                  ],
-                  selectedIndex: selectedIndex,
-                  onDestinationSelected: (value) {
-                    setState(() {
-                      print('Selected index is $selectedIndex');
-                      setPage(selectedIndex);
-                    });
-                  },
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                  child: page,
-                ),
-              ),
-            ],
+          body: Container(
+            color: Theme.of(context).colorScheme.inversePrimary,
+            child: page,
           ),
-          drawer: const DrawerWidget(),
+          drawer: DrawerWidget(
+            navigate: setPage,
+            status: widget.isConnected,
+          ),
         );
       },
     );
