@@ -11,15 +11,15 @@ class MenuListTileWidget extends StatefulWidget {
 }
 
 class _MenuListTileWidgetState extends State<MenuListTileWidget> {
-  Widget addition = const ListBody();
+  //Widget addition = ;
 
-  void setOption() {
+  /*void setOption() {
     if (widget.status) {
       addition = ConnectedTiles(navigate: widget.navigate);
     } else {
       addition = const ListBody();
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class _MenuListTileWidgetState extends State<MenuListTileWidget> {
           ],
         ),
         const Divider(),
-        addition,
+        ConnectedTiles(navigate: widget.navigate),
       ],
     );
   }

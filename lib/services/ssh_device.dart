@@ -26,7 +26,7 @@ class Tester {
 
 class SSHConnection {
   late Device _client;
-  final String _result = '';
+  late String _result = '';
   final List _array = [];
 
   SSHConnection({required Device client}) {
@@ -37,27 +37,7 @@ class SSHConnection {
     _client = d;
   }
 
-  Future<void> startShell() async {
-    // last thing to work on
-    String? result = '';
 
-    try {
-      //setup connection
-      result = await _client.connect() ?? 'Null result';
-      if (result == 'session_connected') {
-        result = await _client.startShell(
-                ptyType: "xterm",
-                callback: (dynamic res) {
-                  print(res);
-                }) ??
-            'Null Result';
-      }
-    } on PlatformException catch (e) {
-      String erMsg = 'Error: ${e.code}\nError Message: ${e.message}';
-      result = result! + erMsg;
-      print(erMsg);
-    }
-  }
 
   Future<void> setConfig(String cmd) async {
     String result = '';
@@ -80,7 +60,7 @@ class SSHConnection {
     }
   }
 
-  Future<String> getSysInfo() async {
+  Future<void> getSysInfo() async {
     String result = '';
     String cmd = 'cat /etc/os-release';
 
@@ -95,7 +75,12 @@ class SSHConnection {
       result = errMsg;
       print(errMsg);
     }
-    return result;
+    _result = result;
+  }
+
+  String getResult(int opt){
+    getSysInfo();
+    return _result;
   }
 
   String getfullSSHInfo() {
