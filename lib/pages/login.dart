@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:seafloor/services/ssh_device.dart';
+import 'package:ssh2/ssh2.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, required this.navigate, required this.func2});
+  const LoginPage({super.key, required this.navigate});
 
-  final Function navigate, func2;
+  final Function navigate;
   @override
-  _loginPage createState() => _loginPage();
+  State<LoginPage> createState() => _loginPage();
 }
 
 class sshInfo {
@@ -18,6 +19,7 @@ class sshInfo {
 
 class _loginPage extends State<LoginPage> {
   final GlobalKey<FormState> _formStateKey = GlobalKey<FormState>();
+  bool hasError = false;
 
   final sshInfo _info = sshInfo();
   String? _validateInfo(String? info) {
@@ -45,22 +47,33 @@ class _loginPage extends State<LoginPage> {
     return null;
   }
 
-  void _getFullSSH() {
+
+  void _getFullSSH() async {
     if (_formStateKey.currentState!.validate()) {
       _formStateKey.currentState!.save();
       String full = '${_info.username}@${_info.hostname}:${_info.port}';
-      Device currDevice = Device(
+      SSHClient currDevice = SSHClient(
         host: _info.hostname,
         port: _info.port,
         username: _info.username,
         passwordOrKey: _info.password,
       );
+
       setState(() {
-      SSHConnection currConn = SSHConnection(client: currDevice);
-      widget.func2(currConn);
-      widget.navigate(0);
+        //write fail alternative
+        SSHConnection.setClient(currDevice);
+        SSHConnection.initInfo();
+        if (SSHConnection.getError().isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Login failed: ${SSHConnection.getError()}'),
+          ));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Login Successful!')));
+          widget.navigate(0);
+        }
+        print("Full info is $full");
       });
-      print("Full info is $full");
     }
   }
 

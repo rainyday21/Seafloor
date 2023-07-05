@@ -65,16 +65,16 @@ class _currPage extends State<currentPage> {
           page = Home(navigate: setPage);
           break;
         case 1:
-          page = LoginPage(navigate: setPage, func2: setConn);
+          page = LoginPage(navigate: setPage);
           break;
         case 2:
           page = const AboutPage();
           break;
         case 3:
-          page = SystemInfo(connection: widget.currConn);
+          page = const SystemInfo();
           break;
         case 4:
-          page = terminalMain(connection: widget.currConn); //Terminal goes here
+          page = const terminalMain(); //Terminal goes here
           break;
         default:
           throw UnimplementedError('no Widget for $selectedIndex');

@@ -1,51 +1,49 @@
 import 'package:flutter/services.dart';
-import 'package:seafloor/pages/sysInfo.dart';
 import 'package:ssh2/ssh2.dart';
 
-class Device extends SSHClient {
-  Device(
-      {required super.host,
-      required super.port,
-      required super.username,
-      required super.passwordOrKey});
-}
-
-class Tester {
-  late Device _client;
-
-  Tester.withDevice({required Device d}) {
-    _client = d;
-  }
-
-  void method() async {
-    await _client.connect();
-    print(_client.getHostFingerprint());
-    await _client.disconnect();
-  }
-}
-
 class SSHConnection {
-  late Device _client;
-  late String _result = '';
-  final List _array = [];
+  static late SSHClient _client;
+  static String _result = '';
+  static List _array = [];
+  static List<String> _sysInfo = [];
+  static late String _error;
 
-  SSHConnection({required Device client}) {
-    _client = client;
+  static Future<void> initInfo() async {
+    resetValues();
+    await testConnection();
   }
 
-  void getDevice(Device d) {
+  static void setClient(SSHClient d) {
     _client = d;
   }
 
+  static Future<void> testConnection() async{
+    await runCmd('clear');
+  }
 
+  static List<String> getSysInfo(){
+    setSysInfo();
+    print(_sysInfo);
+    return _sysInfo;
+  }
 
-  Future<void> setConfig(String cmd) async {
+  static String getError(){
+    return _error;
+  }
+
+  static String getResult(){
+    return _result;
+  }
+  static void resetValues(){
+    _result = '';
+    _array = [];
+    _sysInfo = [];
+    _error = '';
+  }
+
+  static Future<String> runCmd(String cmd) async {
     String result = '';
-    String cmd = 'sudo raspi-config nonint do_';
 
-    void SetCmd(String opt) {
-      cmd += opt;
-    }
 
     try {
       result = await _client.connect() ?? 'Null Result';
@@ -55,35 +53,44 @@ class SSHConnection {
       await _client.disconnect();
     } on PlatformException catch (e) {
       String errorMessage = 'Error: ${e.code}\nError Message: ${e.message}';
-      result = errorMessage;
+      _error = errorMessage;
       print(errorMessage);
+      result = errorMessage;
     }
+    return result;
   }
 
-  Future<void> getSysInfo() async {
+  static Future<void> setConfig(String cmd) async {
     String result = '';
-    String cmd = 'cat /etc/os-release';
+    String cmd = 'sudo raspi-config nonint do_';
+
 
     try {
-      result = await _client.connect() ?? 'Null';
+      result = await _client.connect() ?? 'Null Result';
       if (result == 'session_connected') {
-        result = await _client.execute(cmd) ?? 'Null';
+        result = await _client.execute(cmd) ?? 'Null Result';
+        _result = result;
+        print(_result);
       }
       await _client.disconnect();
     } on PlatformException catch (e) {
-      String errMsg = 'Error: ${e.code}\nError Message: ${e.message}';
-      result = errMsg;
-      print(errMsg);
+      String errorMessage = 'Error: ${e.code}\nError Message: ${e.message}';
+      result = errorMessage;
+      print(errorMessage);
+
     }
     _result = result;
   }
 
-  String getResult(int opt){
-    getSysInfo();
-    return _result;
+  static Future<void> setSysInfo() async {
+    String result = '';
+    String cmd = 'cat /etc/os-release';
+
+    result = await runCmd(cmd);
+    _sysInfo = result.split('\n');
   }
 
-  String getfullSSHInfo() {
-    return '$_client.username@$_client.host:$_client.port';
+  static String getfullSSHInfo() {
+    return '${_client.username}@${_client.host}:${_client.port}';
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:seafloor/services/ssh_device.dart';
 
 class MenuListTileWidget extends StatefulWidget {
   MenuListTileWidget({super.key, required this.navigate, required this.status});
@@ -64,7 +63,7 @@ class ConnectedTiles extends StatelessWidget {
   ConnectedTiles({super.key, required this.navigate});
 
   final Function navigate;
-  ListBody addition = ListBody();
+  ListBody addition = const ListBody();
 
   @override
   Widget build(BuildContext context) {
