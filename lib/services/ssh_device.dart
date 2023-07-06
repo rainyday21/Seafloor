@@ -7,23 +7,23 @@ class SSHConnection {
   static List _array = [];
   static List<String> _sysInfo = [];
   static late String _error;
+  static bool needPassword = false;
 
-  static Future<void> initInfo() async {
+  static void initInfo() {
     resetValues();
-    await testConnection();
+    testConnection();
   }
 
   static void setClient(SSHClient d) {
     _client = d;
   }
 
-  static Future<void> testConnection() async{
-    await runCmd('clear');
+  static Future<void> testConnection() async  {
+    runCmd('clear').then((value) => null);
   }
 
-  static List<String> getSysInfo(){
-    setSysInfo();
-    print(_sysInfo);
+  static List<String> getSysInfo() {
+    setSysInfo().then((_) => {print(_sysInfo)});
     return _sysInfo;
   }
 
@@ -43,12 +43,17 @@ class SSHConnection {
 
   static Future<String> runCmd(String cmd) async {
     String result = '';
-
-
     try {
       result = await _client.connect() ?? 'Null Result';
       if (result == 'session_connected') {
-        result = await _client.execute(cmd) ?? 'Null Result';
+          result = await _client.execute(cmd) ?? 'Null Result';
+          print(result);
+          _result = result;
+          print(_result);
+          while (result.contains('[sudo]')){
+
+            needPassword = true;
+          }
       }
       await _client.disconnect();
     } on PlatformException catch (e) {

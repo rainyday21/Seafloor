@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MenuListTileWidget extends StatefulWidget {
-  MenuListTileWidget({super.key, required this.navigate, required this.status});
+  MenuListTileWidget({super.key, required this.status});
 
-  final Function navigate;
   bool status;
   @override
   State<MenuListTileWidget> createState() => _MenuListTileWidgetState();
@@ -69,20 +68,37 @@ class ConnectedTiles extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListBody(
       children: [
+
         ListTile(
-          leading: const Icon(Icons.menu_open),
-          title: const Text('SSH Terminal'),
+          leading: const Icon(Icons.settings_outlined),
+          title: const Text('View System Information'),
           onTap: () {
             Navigator.pop(context);
             navigate(3);
           },
         ),
         ListTile(
-          leading: const Icon(Icons.settings_outlined),
-          title: const Text('View System Information'),
+          leading: const Icon(Icons.menu_open),
+          title: const Text('SSH Terminal'),
           onTap: () {
             Navigator.pop(context);
             navigate(4);
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.power_settings_new_outlined),
+          title: const Text('Power Menu'),
+          onTap: () {
+            Navigator.pop(context);
+            navigate(5);
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.power_settings_new_outlined),
+          title: const Text('Processes'),
+          onTap: () {
+            Navigator.pop(context);
+            navigate(6);
           },
         ),
       ],

@@ -18,9 +18,11 @@ class sshInfo {
   int port = 22;
 }
 
+
 class _loginPage extends State<LoginPage> {
   final GlobalKey<FormState> _formStateKey = GlobalKey<FormState>();
   bool hasError = false;
+  bool customPort = false;
 
   final sshInfo _info = sshInfo();
 
@@ -31,6 +33,30 @@ class _loginPage extends State<LoginPage> {
       return 'Not acceptable';
     }
     return null;
+  }
+
+
+  Column PortColumn() {
+    Column pCol;
+    List<Widget> mainColumn = [
+      Checkbox(
+          value: customPort,
+          onChanged: (value) {
+            setState(() {
+              customPort = !customPort;
+            });
+          }
+      ),
+      TextFormField(
+        decoration: const InputDecoration(
+          labelText: 'Port',
+        ),
+        validator: (value) => _validatePort(value),
+        onSaved: (value) => _info.port = int.tryParse(value!)!,
+      )
+    ];
+    customPort ? pCol = Column(children: mainColumn) : pCol = Column(children: [mainColumn[0]],);
+    return pCol;
   }
 
   String? _validateHost(String? info) {
@@ -50,7 +76,7 @@ class _loginPage extends State<LoginPage> {
   }
 
 
-  void _getFullSSH() async {
+  void _getFullSSH() {
     if (_formStateKey.currentState!.validate()) {
       _formStateKey.currentState!.save();
       String full = '${_info.username}@${_info.hostname}:${_info.port}';
@@ -65,35 +91,37 @@ class _loginPage extends State<LoginPage> {
         SSHConnection.setClient(currDevice);
         SSHConnection.initInfo();
         SSHConnection.runCmd('clear').then((String res) {
-          if (SSHConnection
-              .getError()
-              .isNotEmpty) {
+
+          String test = SSHConnection.getError();
+          if (test.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text('Login failed: ${SSHConnection.getError()}'),
             ));
           } else {
             ScaffoldMessenger.of(context)
-                .showSnackBar(
-                const SnackBar(content: Text('Login Successful!')));
+         .showSnackBar(const SnackBar(content: Text('Login Successful!')));
+            SSHConnection.setSysInfo();
             Navigator.push(context, MaterialPageRoute(builder: (context) => const Seafloor()));
           }
-          print("Full info is $full");
+
         });
+        print("Full info is $full");
       });
     }
   }
 
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        body: SafeArea(
-          child: Column(
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.all(
-                  16.0,
-                ),
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            const Padding(
+              padding: EdgeInsets.all(
+                16.0,
               ),
+            ),
               const Text(
                 'Enter machine info:',
                 style: TextStyle(

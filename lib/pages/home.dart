@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seafloor/utils/classes.dart';
+import 'package:ssh2/ssh2.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key, required this.navigate});
@@ -64,9 +65,7 @@ class TitleWidget extends StatelessWidget {
         text: 'Welcome to Seafloor!',
         style: TextStyle(
           fontSize: 30.0,
-          color: Colors.blueGrey,
-          decoration: TextDecoration.none,
-          decorationColor: Colors.deepOrangeAccent,
+          color: MainTheme.mainColor,
           fontStyle: FontStyle.italic,
           fontWeight: FontWeight.bold,
         ),
@@ -126,27 +125,27 @@ class ServicesSection extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
             ),
             TextButton.icon(
+              onPressed: () {
+                navigate(5);
+              },
+              label: const Text('View System Info'),
+              icon: const Icon(
+                Icons.settings_outlined,
+                color: MainTheme.secondaryColor,
+              ),
+            ),
+            TextButton.icon(
               icon: const Icon(
                 Icons.menu_open,
                 color: Colors.lightGreen,
               ),
               onPressed: () {
-                navigate(3);
+                navigate(4);
               },
               label: const Text('SSH Terminal'),
             ),
             const Padding(
               padding: EdgeInsets.all(8.0),
-            ),
-            TextButton.icon(
-              onPressed: () {
-                navigate(4);
-              },
-              label: const Text('View System Info'),
-              icon: const Icon(
-                Icons.settings_outlined,
-                color: Colors.blueGrey,
-              ),
             ),
           ],
         )
