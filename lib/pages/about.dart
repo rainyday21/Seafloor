@@ -31,7 +31,7 @@ class AboutPage extends StatelessWidget {
                   Text('''
 Orrane Reid
 Cal Poly Pomona
-CS 4750
+CS 4800
 '''),
                 ],
               ),
