@@ -38,6 +38,23 @@ class Home extends StatelessWidget {
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             Text(
+                              'Getting Started',
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueGrey,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(16.0),
+                            ),
+                            Text('''
+                                This is an application that is for Linux Machines. 
+                                The menu on the left allows for viewing processes, 
+                                system information, as well as sending remote shutdown, suspend, and restart signals.
+                                Thank you for using my app!
+                                '''),
+                            Text(
                               'About me',
                               style: TextStyle(
                                 fontSize: 24.0,
@@ -49,10 +66,10 @@ class Home extends StatelessWidget {
                               padding: EdgeInsets.all(16.0),
                             ),
                             Text('''
-Orrane Reid
-Cal Poly Pomona
-CS 4750
-''')
+                            Orrane Reid
+                            Cal Poly Pomona
+                            CS 4750
+                                ''')
                           ],
                         ),
                       )),
