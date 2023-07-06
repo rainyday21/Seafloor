@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
 
-class Device {
-  const Device(
-      {required this.username, required this.hostname, required this.port});
+class MainTheme {
+    static const Color mainColor = Colors.lightBlue;
+    static const Color secondaryColor = Colors.blueGrey;
+    static const Color errorColor = Color.fromRGBO(217, 48, 37, 1.0);
+    static const Color deleteColor = Color.fromRGBO(190, 0, 0, 1.0);
 
-  final String username, hostname;
-  final int port;
 }

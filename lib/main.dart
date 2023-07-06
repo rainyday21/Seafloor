@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:seafloor/pages/about.dart';
 import 'package:seafloor/pages/home.dart';
 import 'package:seafloor/pages/login.dart';
+import 'package:seafloor/pages/power_menu.dart';
 import 'package:seafloor/pages/sysInfo.dart';
+import 'package:seafloor/pages/system_processes.dart';
 import 'package:seafloor/pages/terminal.dart';
 import 'package:seafloor/services/ssh_device.dart';
 import 'package:seafloor/widgets/menulist_main.dart';
@@ -76,6 +78,12 @@ class _currPage extends State<currentPage> {
         case 4:
           page = const terminalMain(); //Terminal goes here
           break;
+        case 5:
+          page = const PowerMenu();
+          break;
+        case 6:
+          page = const SysProc();
+          break;
         default:
           throw UnimplementedError('no Widget for $selectedIndex');
       }
@@ -101,5 +109,15 @@ class _currPage extends State<currentPage> {
         );
       },
     );
+  }
+
+  @override
+  void initState(){
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      setState(() {});
+    });
+
   }
 }

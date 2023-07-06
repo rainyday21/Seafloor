@@ -3,9 +3,8 @@ import 'package:seafloor/services/ssh_device.dart';
 import 'package:ssh2/ssh2.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, required this.navigate});
+  const LoginPage({super.key});
 
-  final Function navigate;
   @override
   State<LoginPage> createState() => _loginPage();
 }
@@ -17,9 +16,11 @@ class sshInfo {
   int port = 22;
 }
 
+
 class _loginPage extends State<LoginPage> {
   final GlobalKey<FormState> _formStateKey = GlobalKey<FormState>();
   bool hasError = false;
+  bool customPort = false;
 
   final sshInfo _info = sshInfo();
   String? _validateInfo(String? info) {
@@ -29,6 +30,30 @@ class _loginPage extends State<LoginPage> {
       return 'Not acceptable';
     }
     return null;
+  }
+
+
+  Column PortColumn() {
+    Column pCol;
+    List<Widget> mainColumn = [
+      Checkbox(
+          value: customPort,
+          onChanged: (value) {
+            setState(() {
+              customPort = !customPort;
+            });
+          }
+      ),
+      TextFormField(
+        decoration: const InputDecoration(
+          labelText: 'Port',
+        ),
+        validator: (value) => _validatePort(value),
+        onSaved: (value) => _info.port = int.tryParse(value!)!,
+      )
+    ];
+    customPort ? pCol = Column(children: mainColumn) : pCol = Column(children: [mainColumn[0]],);
+    return pCol;
   }
 
   String? _validateHost(String? info) {
@@ -48,7 +73,7 @@ class _loginPage extends State<LoginPage> {
   }
 
 
-  void _getFullSSH() async {
+  void _getFullSSH() {
     if (_formStateKey.currentState!.validate()) {
       _formStateKey.currentState!.save();
       String full = '${_info.username}@${_info.hostname}:${_info.port}';
@@ -58,20 +83,24 @@ class _loginPage extends State<LoginPage> {
         username: _info.username,
         passwordOrKey: _info.password,
       );
-
       setState(() {
         //write fail alternative
         SSHConnection.setClient(currDevice);
         SSHConnection.initInfo();
-        if (SSHConnection.getError().isNotEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Login failed: ${SSHConnection.getError()}'),
-          ));
-        } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('Login Successful!')));
-          widget.navigate(0);
-        }
+        SSHConnection.runCmd('clear').then((String res) {
+          String test = SSHConnection.getError();
+          if (test.isNotEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Login failed: ${SSHConnection.getError()}'),
+            ));
+          } else {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text('Login Successful!')));
+            SSHConnection.setSysInfo();
+            Navigator.push(Home())
+          }
+
+        });
         print("Full info is $full");
       });
     }
@@ -110,6 +139,13 @@ class _loginPage extends State<LoginPage> {
                   children: <Widget>[
                     TextFormField(
                       decoration: const InputDecoration(
+                        labelText: 'Hostname',
+                      ),
+                      validator: (value) => _validateHost(value!),
+                      onSaved: (value) => _info.hostname = value!,
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
                         labelText: 'Username',
                       ),
                       validator: (value) => _validateInfo(value!),
@@ -123,20 +159,7 @@ class _loginPage extends State<LoginPage> {
                       validator: (value) => _validateInfo(value!),
                       onSaved: (value) => _info.password = value!,
                     ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Hostname',
-                      ),
-                      validator: (value) => _validateHost(value!),
-                      onSaved: (value) => _info.hostname = value!,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Port',
-                      ),
-                      validator: (value) => _validatePort(value),
-                      onSaved: (value) => _info.port = int.tryParse(value!)!,
-                    )
+                    PortColumn(),
                   ],
                 ),
               ),
