@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MenuListTileWidget extends StatefulWidget {
-  MenuListTileWidget({super.key, required this.status});
-
+  MenuListTileWidget({super.key, required this.status, required this.navigate});
+  final Function navigate;
   bool status;
   @override
   State<MenuListTileWidget> createState() => _MenuListTileWidgetState();
@@ -26,27 +26,19 @@ class _MenuListTileWidgetState extends State<MenuListTileWidget> {
         ListBody(
           children: <Widget>[
             ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-                widget.navigate(0);
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.key_outlined),
-              title: const Text('Login'),
+              title: const Text('Log out'),
               onTap: () {
                 Navigator.pop(context);
-                widget.navigate(1);
+                Navigator.pop(context);
               },
             ),
             ListTile(
               leading: const Icon(Icons.info_outline),
-              title: const Text('About Me'),
+              title: const Text('Home'),
               onTap: () {
                 Navigator.pop(context);
-                widget.navigate(2);
+                widget.navigate(0);
               },
             ),
           ],
@@ -68,21 +60,20 @@ class ConnectedTiles extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListBody(
       children: [
-
         ListTile(
-          leading: const Icon(Icons.settings_outlined),
+          leading: const Icon(Icons.line_weight_sharp),
           title: const Text('View System Information'),
           onTap: () {
             Navigator.pop(context);
-            navigate(3);
+            navigate(2);
           },
         ),
         ListTile(
           leading: const Icon(Icons.menu_open),
-          title: const Text('SSH Terminal'),
+          title: const Text('Processes'),
           onTap: () {
             Navigator.pop(context);
-            navigate(4);
+            navigate(3);
           },
         ),
         ListTile(
@@ -90,15 +81,7 @@ class ConnectedTiles extends StatelessWidget {
           title: const Text('Power Menu'),
           onTap: () {
             Navigator.pop(context);
-            navigate(5);
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.power_settings_new_outlined),
-          title: const Text('Processes'),
-          onTap: () {
-            Navigator.pop(context);
-            navigate(6);
+            navigate(1);
           },
         ),
       ],

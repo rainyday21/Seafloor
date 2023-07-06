@@ -4,6 +4,9 @@ import 'package:seafloor/pages/home.dart';
 import 'package:seafloor/services/ssh_device.dart';
 import 'package:ssh2/ssh2.dart';
 
+import '../utils/app_state.dart';
+import 'about.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -101,7 +104,8 @@ class _loginPage extends State<LoginPage> {
             ScaffoldMessenger.of(context)
          .showSnackBar(const SnackBar(content: Text('Login Successful!')));
             SSHConnection.setSysInfo();
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const Seafloor()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => currentPage()));
+            _formStateKey.currentState?.reset();
           }
 
         });
@@ -114,6 +118,10 @@ class _loginPage extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login'),
+        backgroundColor: AppState.mainColor,
+      ),
       body: SafeArea(
         child: Column(
           children: <Widget>[

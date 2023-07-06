@@ -60,14 +60,6 @@ class AppSSH {
     );
   }
 
-  static void AppCmd(String cmd, BuildContext context) async  {
-    await SSHConnection.runCmd(cmd);
-    print(SSHConnection.getResult());
-    while (SSHConnection.needPassword) {
-        _buildDialog(context);
-        SSHConnection.runCmd(_pswrd);
-      }
-  }
 
 
 }

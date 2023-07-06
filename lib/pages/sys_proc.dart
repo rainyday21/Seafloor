@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:seafloor/services/ssh_device.dart';
 
-import '../services/pass_dialog.dart';
+import '../services/appSSH.dart';
+import '../utils/app_state.dart';
 
 class SysProc extends StatefulWidget{
   const SysProc({super.key});
@@ -11,23 +12,35 @@ class SysProc extends StatefulWidget{
 class _SysProcState extends State<SysProc> {
   String opt = 'ps -ax';
   List<String> _process = [];
-  List<Widget> _comp = [];
+  List<Widget> _comp = [
+    Text('Processes',
+    style: TextStyle(
+      color: AppState.secondaryColor,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
+  ),];
 
-  getProcess(opt) async   {
-    AppSSH.AppCmd(opt, context);
+  getProcess(opt) async {
+    SSHConnection.resetValues();
+    await SSHConnection.runCmd(opt).then((_) => {
+    setState(() {
     var ans = SSHConnection.getResult();
-      print(ans);
-        _process = ans.split('\n');
+    print(ans);
+    _process = ans.split('\n');
+    displayProcess();
+    })
+    });
   }
 
-  List<Widget> displayProcess(){
-    List<Widget> proc = [];
-    for (int i = 0; i < _process.length; i++){
+  void displayProcess(){
+    setState(() {
+      for (int i = 0; i < _process.length; i++) {
         print(_process[i].split(' '));
-        proc.add(Text(_process[i]));
-        proc.add(const Padding(padding: EdgeInsets.all(3.0)));
+        _comp.add(Text(_process[i]));
+        _comp.add(const Padding(padding: EdgeInsets.all(3.0)));
       }
-    return proc;
+    });
   }
 
   @override
@@ -35,8 +48,8 @@ class _SysProcState extends State<SysProc> {
     super.initState();
     setState(() {
       getProcess(opt);
-      _comp = displayProcess();
     });
+    displayProcess();
 
   }
 

@@ -12,7 +12,7 @@ class _sysInfo extends State<SystemInfo> {
   List<String> info = [];
 
   getSysInfo() async {
-    info = SSHConnection.getSysInfo();
+
     await SSHConnection.setSysInfo();
     setState(() {
       info = SSHConnection.getSysInfo();

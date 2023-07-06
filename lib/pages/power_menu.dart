@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seafloor/services/pass_dialog.dart';
+import 'package:seafloor/services/appSSH.dart';
 import 'package:seafloor/services/ssh_device.dart';
 
 class PowerMenu extends StatelessWidget {
@@ -108,7 +108,7 @@ class ConfirmDialog extends StatelessWidget {
                   height: 30,
                   child: ElevatedButton(
                       onPressed: () {
-                        AppSSH.AppCmd(cmd, context);
+                        SSHConnection.runCmd(cmd);
                         Navigator.pop(context);
                       },
                       child: const Text('Apply')),

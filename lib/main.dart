@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:seafloor/pages/about.dart';
+import 'package:seafloor/pages/config.dart';
 import 'package:seafloor/pages/home.dart';
 import 'package:seafloor/pages/login.dart';
 import 'package:seafloor/pages/power_menu.dart';
 import 'package:seafloor/pages/sysInfo.dart';
-import 'package:seafloor/pages/system_processes.dart';
+import 'package:seafloor/pages/sys_proc.dart';
 import 'package:seafloor/pages/terminal.dart';
 import 'package:seafloor/services/ssh_device.dart';
-import 'package:seafloor/utils/classes.dart';
+import 'package:seafloor/utils/app_state.dart';
 import 'package:seafloor/widgets/menulist_main.dart';
 
 void main() => runApp(const Seafloor());
@@ -57,7 +58,7 @@ class currentPage extends StatefulWidget {
 
 class _currPage extends State<currentPage> {
   var selectedIndex = 0;
-  Widget page = const AboutPage();
+  Widget page = const Home();
 
   void setConn(SSHConnection newConn) {
     widget.currConn = newConn;
@@ -73,26 +74,19 @@ class _currPage extends State<currentPage> {
     setState(() {
       switch (selectedIndex) {
         case 0:
-          page = Home(navigate: setPage);
+          page = const Home();
           break;
         case 1:
-          page = LoginPage();
-          break;
-        case 2:
-          page = const AboutPage();
-          break;
-        case 3:
-          page = const SystemInfo();
-          break;
-        case 4:
-          page = const terminalMain(); //Terminal goes here
-          break;
-        case 5:
           page = const PowerMenu();
           break;
-        case 6:
+        case 2:
+          page = const SystemInfo();
+          break;
+        case 3:
           page = const SysProc();
           break;
+        case 4:
+          page = SettingsPage();
         default:
           throw UnimplementedError('no Widget for $selectedIndex');
       }
@@ -101,11 +95,10 @@ class _currPage extends State<currentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Seafloor 0.1'),
+            title: const Text('Seafloor'),
+            backgroundColor: AppState.mainColor,
           ),
           body: Container(
             color: Theme.of(context).colorScheme.inversePrimary,
@@ -116,8 +109,6 @@ class _currPage extends State<currentPage> {
             status: widget.isConnected,
           ),
         );
-      },
-    );
   }
 
   @override
