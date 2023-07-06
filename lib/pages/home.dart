@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:seafloor/utils/classes.dart';
 
 class Home extends StatelessWidget {
-  const Home({super.key});
+  const Home({super.key, required this.navigate});
 
   final Function navigate;
   @override
@@ -36,9 +36,6 @@ class Home extends StatelessWidget {
                       ),
                       const Padding(
                         padding: EdgeInsets.all(16.0),
-                      ),
-                      const RecDevSection(
-                        devices: [],
                       ),
                     ],
                   ),
@@ -158,31 +155,3 @@ class ServicesSection extends StatelessWidget {
   }
 }
 
-class RecDevSection extends StatefulWidget {
-  const RecDevSection({required this.devices, super.key});
-
-  final List<Device> devices;
-
-  @override
-  State<RecDevSection> createState() => _RecDevSectionState();
-}
-
-class _RecDevSectionState extends State<RecDevSection> {
-  List<Device> devList = [];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text(
-          'Recent Devices',
-          style: TextStyle(
-            color: Theme.of(context).primaryColorDark,
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    );
-  }
-}

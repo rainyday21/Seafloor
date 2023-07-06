@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:seafloor/main.dart';
 import 'package:seafloor/pages/home.dart';
 import 'package:seafloor/services/ssh_device.dart';
 import 'package:ssh2/ssh2.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, required this.navigate});
+  const LoginPage({super.key});
 
-  final Function navigate;
   @override
   State<LoginPage> createState() => _loginPage();
 }
@@ -75,7 +75,7 @@ class _loginPage extends State<LoginPage> {
             ScaffoldMessenger.of(context)
                 .showSnackBar(
                 const SnackBar(content: Text('Login Successful!')));
-            widget.navigate(0);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const Seafloor()));
           }
           print("Full info is $full");
         });

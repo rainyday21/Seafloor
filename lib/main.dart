@@ -74,7 +74,7 @@ class _currPage extends State<currentPage> {
           page = Home(navigate: setPage);
           break;
         case 1:
-          page = LoginPage(navigate: setPage);
+          page = LoginPage();
           break;
         case 2:
           page = const AboutPage();
