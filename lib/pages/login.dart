@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seafloor/pages/home.dart';
 import 'package:seafloor/services/ssh_device.dart';
 import 'package:ssh2/ssh2.dart';
 
@@ -97,7 +98,7 @@ class _loginPage extends State<LoginPage> {
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(content: Text('Login Successful!')));
             SSHConnection.setSysInfo();
-            Navigator.push(Home())
+            MaterialPageRoute(builder: (context) => const Home(),)
           }
 
         });

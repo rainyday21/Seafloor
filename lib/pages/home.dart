@@ -3,7 +3,7 @@ import 'package:seafloor/utils/classes.dart';
 import 'package:ssh2/ssh2.dart';
 
 class Home extends StatelessWidget {
-  const Home({super.key, required this.navigate});
+  const Home({super.key});
 
   final Function navigate;
   @override

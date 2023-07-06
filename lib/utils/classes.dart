@@ -7,3 +7,22 @@ class MainTheme {
     static const Color deleteColor = Color.fromRGBO(190, 0, 0, 1.0);
 
 }
+
+class AppState {
+    static Color mainColor = MainTheme.mainColor;
+    static Color secondaryColor = MainTheme.secondaryColor;
+    static ThemeMode currentTheme = ThemeMode.light;
+    static bool isDark = false;
+
+    static ThemeMode getTheme(){
+        return AppState.isDark ? ThemeMode.dark : ThemeMode.light;
+    }
+
+    static void updateTheme() {
+        currentTheme = getTheme();
+    }
+
+    static void updatePrimary(Color c){
+
+    }
+}
